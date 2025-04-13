@@ -21,6 +21,7 @@
     "react-router": "^7.5.0"
   },
   "devDependencies": {
+    "@hono/vite-dev-server": "^0.19.0",
     "@ofk/eslint-config-recommend": "^7.2.2",
     "@react-router/dev": "^7.5.0",
     "@tailwindcss/vite": "^4.0.0",
@@ -37,7 +38,8 @@
     "tailwindcss": "^4.0.0",
     "typescript": "^5.7.2",
     "vite": "^5.4.11",
-    "vite-tsconfig-paths": "^5.1.4"
+    "vite-tsconfig-paths": "^5.1.4",
+    "wrangler": "^4.10.0"
   },
   "packageManager": "pnpm@9.15.0+sha256.09a8fe31a34fda706354680619f4002f4ccef6dadff93240d24ef6c831f0fd28"
 }
