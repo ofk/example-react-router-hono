@@ -4,9 +4,11 @@
   "type": "module",
   "scripts": {
     "build": "react-router build",
+    "deploy": "npm run build && wrangler deploy",
     "dev": "react-router dev",
     "lint": "npm run typecheck && eslint . && prettier -c . && prettier-package-json -l",
     "lint-fix": "npm run typecheck && eslint --fix . && prettier -w . && prettier-package-json --write",
+    "preview": "npm run build && wrangler dev",
     "start": "react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc"
   },

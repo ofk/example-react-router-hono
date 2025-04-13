@@ -1,3 +1,4 @@
+import adapter from '@hono/vite-dev-server/cloudflare';
 import { reactRouter } from '@react-router/dev/vite';
 import tailwindcss from '@tailwindcss/vite';
 import serverAdapter from 'hono-react-router-adapter/vite';
@@ -10,6 +11,7 @@ export default defineConfig({
     reactRouter(),
     tsconfigPaths(),
     serverAdapter({
+      adapter,
       entry: 'server/index.ts',
     }),
   ],
