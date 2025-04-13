@@ -13,6 +13,8 @@
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
+    "@auth/core": "^0.38.0",
+    "@hono/auth-js": "^1.0.15",
     "@react-router/fs-routes": "^7.5.0",
     "@react-router/node": "^7.5.0",
     "@react-router/serve": "^7.5.0",
