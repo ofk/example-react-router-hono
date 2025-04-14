@@ -8,7 +8,7 @@ export const meta: Route.MetaFunction = () => [{ title: 'About | New React Route
 
 export async function clientLoader(_: Route.ClientLoaderArgs) {
   const client = hc<AppType>('/');
-  const resp = await client.api.$get();
+  const resp = await client.api.secure.$get();
   if (!resp.ok) {
     throw new Error(await resp.text());
   }
@@ -20,7 +20,7 @@ export default function About({ loaderData }: Route.ComponentProps): React.React
   return (
     <div className="p-4">
       <h1 className="text-4xl">About</h1>
-      <p>{loaderData.message}</p>
+      <p>{loaderData.name}</p>
       <p>
         <Link className="text-blue-600" to="/">
           Welcome
