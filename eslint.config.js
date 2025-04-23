@@ -7,8 +7,9 @@ export default config({
       rules: {
         '@typescript-eslint/explicit-function-return-type': [
           'error',
-          { allowedNames: ['clientLoader'] },
+          { allowedNames: ['clientAction', 'clientLoader'] },
         ],
+        '@typescript-eslint/promise-function-async': 'off',
         'react-refresh/only-export-components': 'off',
       },
     },

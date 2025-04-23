@@ -12,8 +12,8 @@ export default function Home(): React.ReactElement {
     <div className="p-4">
       <h1 className="text-4xl">Welcome</h1>
       <p>
-        <Link className="text-blue-600" to="/about">
-          About
+        <Link className="text-blue-600" to="/files">
+          Files
         </Link>
       </p>
     </div>
