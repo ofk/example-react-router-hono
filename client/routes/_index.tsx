@@ -15,6 +15,9 @@ export default function Home(): React.ReactElement {
         <Link className="text-blue-600" to="/files">
           Files
         </Link>
+        <Link className="text-blue-600" to="/texts">
+          Texts
+        </Link>
       </p>
     </div>
   );

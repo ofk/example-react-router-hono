@@ -1,6 +1,13 @@
 import type { Context } from 'hono';
 
 import {
+  DeleteItemCommand,
+  DynamoDBClient,
+  GetItemCommand,
+  PutItemCommand,
+  ScanCommand,
+} from '@aws-sdk/client-dynamodb';
+import {
   DeleteObjectCommand,
   GetObjectCommand,
   ListObjectsV2Command,
@@ -8,10 +15,17 @@ import {
   S3Client,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
+import { HTTPException } from 'hono/http-exception';
+import { z } from 'zod';
 
 interface AppEnv {
   Bindings: {
+    DYNAMODB_ACCESS_KEY_ID: string;
+    DYNAMODB_ENDPOINT_URL: string;
+    DYNAMODB_REGION: string;
+    DYNAMODB_SECRET_ACCESS_KEY: string;
     S3_ACCESS_KEY_ID: string;
     S3_ENDPOINT_URL: string;
     S3_REGION: string;
@@ -94,7 +108,77 @@ const apiFiles = new Hono<AppEnv>()
     return c.json({ ok: true });
   });
 
-const _route = app.route('/api/files', apiFiles);
+const TABLE_NAME = 'example-react-router-hono-table';
+
+function getDynamoDBClient(c: Context<AppEnv>): DynamoDBClient {
+  return new DynamoDBClient({
+    credentials: {
+      accessKeyId: c.env.DYNAMODB_ACCESS_KEY_ID,
+      secretAccessKey: c.env.DYNAMODB_SECRET_ACCESS_KEY,
+    },
+    endpoint: c.env.DYNAMODB_ENDPOINT_URL,
+    region: c.env.DYNAMODB_REGION,
+  });
+}
+
+const apiTexts = new Hono<AppEnv>()
+  .get('', async (c) => {
+    const ddb = getDynamoDBClient(c);
+    const result = await ddb.send(
+      new ScanCommand({
+        ProjectionExpression: 'title',
+        TableName: TABLE_NAME,
+      }),
+    );
+    const titles =
+      result.Items?.map((item) => ({
+        title: item.title.S ?? '',
+      })) ?? [];
+    return c.json(titles);
+  })
+  .get(':title', async (c) => {
+    const ddb = getDynamoDBClient(c);
+    const title = c.req.param('title');
+
+    const result = await ddb.send(
+      new GetItemCommand({
+        Key: { title: { S: title } },
+        TableName: TABLE_NAME,
+      }),
+    );
+    const item = result.Item;
+    if (!item) {
+      throw new HTTPException(404);
+    }
+
+    return c.json({
+      body: item.body.S ?? '',
+      title: item.title.S ?? '',
+    });
+  })
+  .post(':title', zValidator('json', z.object({ body: z.string() })), async (c) => {
+    const ddb = getDynamoDBClient(c);
+    const title = c.req.param('title');
+    const { body } = c.req.valid('json');
+    if (body) {
+      await ddb.send(
+        new PutItemCommand({
+          Item: { body: { S: body }, title: { S: title } },
+          TableName: TABLE_NAME,
+        }),
+      );
+    } else {
+      await ddb.send(
+        new DeleteItemCommand({
+          Key: { title: { S: title } },
+          TableName: TABLE_NAME,
+        }),
+      );
+    }
+    return c.json({ ok: true });
+  });
+
+const _route = app.route('/api/files', apiFiles).route('/api/texts', apiTexts);
 
 export type AppType = typeof _route;
 
