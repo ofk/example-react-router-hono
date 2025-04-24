@@ -13,8 +13,10 @@
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.788.0",
     "@aws-sdk/client-s3": "^3.787.0",
     "@aws-sdk/s3-request-presigner": "^3.787.0",
+    "@hono/zod-validator": "^0.4.3",
     "@react-router/fs-routes": "^7.5.0",
     "@react-router/node": "^7.5.0",
     "@react-router/serve": "^7.5.0",
@@ -22,7 +24,8 @@
     "isbot": "^5.1.17",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router": "^7.5.0"
+    "react-router": "^7.5.0",
+    "zod": "^3.24.3"
   },
   "devDependencies": {
     "@hono/vite-dev-server": "^0.19.0",
