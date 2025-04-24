@@ -8,7 +8,7 @@ services:
     environment:
       - DEBUG=${DEBUG:-0}
       - LOCALSTACK_PERSISTENCE=1
-      - LOCALSTACK_SERVICES=s3
+      - LOCALSTACK_SERVICES=s3,dynamodb
     volumes:
       - '${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack'
       - './docker-compose-init-scripts:/etc/localstack/init/ready.d'
